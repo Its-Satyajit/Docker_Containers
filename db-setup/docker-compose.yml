@@ -1,0 +1,58 @@
+services:
+  mariadb:
+    image: mariadb:latest
+    container_name: mariadb
+    restart: always
+    environment:
+      MARIADB_ROOT_PASSWORD: password
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./mariadb_data:/var/lib/mysql
+    networks:
+      - backend
+
+  mysql:
+    image: mysql:latest
+    container_name: mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+    ports:
+      - "3307:3306"
+    volumes:
+      - ./mysql_data:/var/lib/mysql
+    networks:
+      - backend
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin:latest
+    restart: always
+    environment:
+      PMA_HOSTS: mariadb, mysql
+      PMA_USER: root
+      PMA_PASSWORD: password
+      UPLOAD_LIMIT: 2G
+    ports:
+      - "8080:80"
+    # volumes:
+    #   - ./phpmyadmin_data:/usr/local/etc/php
+    networks:
+      - backend
+
+  watchtower:
+    image: containrrr/watchtower:latest
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    restart: always
+    networks:
+      - backend
+
+networks:
+  backend:
+
+
+volumes:
+  mariadb_data:
+  mysql_data:
+  # phpmyadmin_data:

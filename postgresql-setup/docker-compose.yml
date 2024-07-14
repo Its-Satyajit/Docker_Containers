@@ -1,0 +1,17 @@
+
+services:
+  postgres:
+    image: postgres:latest
+    container_name: postgres
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: default
+    ports:
+      - "5432:5432"  # Expose PostgreSQL port (5432) to host machine
+    volumes:
+      - ./postgres-data:/var/lib/postgresql/data  # Persist PostgreSQL data
+
+volumes:
+  postgres-data:
+
