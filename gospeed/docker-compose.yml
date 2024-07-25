@@ -1,0 +1,20 @@
+
+services:
+  gopeed:
+    image: liwei2633/gopeed:latest
+    container_name: gopeed
+    ports:
+      - "9999:9999"
+    volumes:
+      - /home/satyajit/Downloads:/app/Downloads
+      - ./storage:/app/storage
+    command: ["-u", "admin", "-p", "password"]
+    restart: unless-stopped
+
+  watchtower:
+    image: containrrr/watchtower
+    container_name: watchtower
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    command: --cleanup
+    restart: unless-stopped

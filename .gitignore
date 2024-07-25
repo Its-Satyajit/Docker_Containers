@@ -4,3 +4,4 @@
 /pihole-setup/etc-dnsmasq.d
 /pihole-setup/etc-pihole
 /postgresql-setup/postgres-data
+/gospeed/storage
