@@ -4,7 +4,7 @@
         {
             "matchDepTypes": ["dependencies", "devDependencies"],
             "matchUpdateTypes": ["major"],
-            "enabled": false
+            "enabled": true
         },
         {
             "matchDepTypes": ["dependencies"],
