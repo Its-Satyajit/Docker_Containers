@@ -1,7 +1,7 @@
 
 services:
   gopeed:
-    image: liwei2633/gopeed:latest
+    image: liwei2633/gopeed:1.5.6
     container_name: gopeed
     ports:
       - "9999:9999"
@@ -16,7 +16,7 @@ services:
     #   - 8.8.4.4
 
   watchtower:
-    image: containrrr/watchtower:latest
+    image: containrrr/watchtower:1.7.0
     container_name: watchtower
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
