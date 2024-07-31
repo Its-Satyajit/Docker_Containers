@@ -8,8 +8,12 @@ services:
     volumes:
       - /home/satyajit/Downloads:/app/Downloads
       - ./storage:/app/storage
-    command: ["-u", "admin", "-p", "password"]
+    # command: ["-u", "admin", "-p", "123456"]
     restart: unless-stopped
+    network_mode: "bridge"  
+    # dns:
+    #   - 8.8.8.8  # Google DNS
+    #   - 8.8.4.4
 
   watchtower:
     image: containrrr/watchtower
@@ -18,3 +22,7 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
     command: --cleanup
     restart: unless-stopped
+    network_mode: "bridge"  
+    # dns:
+    #   - 8.8.8.8  # Google DNS
+    #   - 8.8.4.4

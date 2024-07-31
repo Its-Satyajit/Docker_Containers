@@ -51,7 +51,6 @@ services:
 networks:
   backend:
 
-
 volumes:
   mariadb_data:
   mysql_data:
