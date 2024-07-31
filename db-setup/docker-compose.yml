@@ -26,7 +26,7 @@ services:
       - backend
 
   phpmyadmin:
-    image: phpmyadmin/phpmyadmin:5.0.0
+    image: phpmyadmin/phpmyadmin:5.2.1
     restart: always
     environment:
       PMA_HOSTS: mariadb, mysql
