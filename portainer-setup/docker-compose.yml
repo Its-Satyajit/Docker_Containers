@@ -1,6 +1,6 @@
 services:
   portainer:
-    image: portainer/portainer-ce
+    image: portainer/portainer-ce:latest
     container_name: portainer
     restart: always
     ports:
@@ -11,7 +11,7 @@ services:
       - portainer_data:/data
 
   watchtower:
-    image: containrrr/watchtower
+    image: containrrr/watchtower:latest
     container_name: portainer_watchtower
     restart: always
     volumes:

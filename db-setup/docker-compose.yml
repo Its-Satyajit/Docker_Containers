@@ -1,6 +1,6 @@
 services:
   mariadb:
-    image: mariadb
+    image: mariadb:latest
     container_name: mariadb
     restart: always
     environment:
@@ -13,7 +13,7 @@ services:
       - backend
 
   mysql:
-    image: mysql
+    image: mysql:latest
     container_name: mysql
     restart: always
     environment:
@@ -26,7 +26,7 @@ services:
       - backend
 
   phpmyadmin:
-    image: phpmyadmin/phpmyadmin
+    image: phpmyadmin/phpmyadmin:latest
     restart: always
     environment:
       PMA_HOSTS: mariadb, mysql
@@ -41,7 +41,7 @@ services:
       - backend
 
   watchtower:
-    image: containrrr/watchtower
+    image: containrrr/watchtower:latest
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
     restart: always

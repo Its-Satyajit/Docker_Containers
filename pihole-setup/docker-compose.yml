@@ -1,6 +1,6 @@
 services:
   pihole:
-    image: pihole/pihole
+    image: pihole/pihole:latest
     container_name: pihole
     ports:
       - "53:53/tcp"
@@ -19,7 +19,7 @@ services:
         ipv4_address: 172.20.0.100
 
   watchtower:
-    image: containrrr/watchtower
+    image: containrrr/watchtower:latest
     container_name: pihole_watchtower
     restart: always
     volumes:
