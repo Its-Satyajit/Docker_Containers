@@ -11,7 +11,7 @@ services:
       - portainer_data:/data
 
   watchtower:
-    image: containrrr/watchtower:1.7.0
+    image: containrrr/watchtower:1.7.1
     container_name: portainer_watchtower
     restart: always
     volumes:

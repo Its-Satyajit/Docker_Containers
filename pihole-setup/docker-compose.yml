@@ -19,7 +19,7 @@ services:
         ipv4_address: 172.20.0.100
 
   watchtower:
-    image: containrrr/watchtower:1.7.0
+    image: containrrr/watchtower:1.7.1
     container_name: pihole_watchtower
     restart: always
     volumes:
