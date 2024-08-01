@@ -145,9 +145,3 @@ Contributions are welcome! If you have suggestions or encounter any issues, feel
 ## License
 
 This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for more details.
-
----
-
-**Keywords**: Docker, Docker Compose, MySQL, MariaDB, phpMyAdmin, Pi-hole, Portainer, PostgreSQL, Prometheus, Grafana, GoSpeed, Watchtower, Container Management, Monitoring, Database Management.
-
-**Description**: A comprehensive collection of Docker Compose configurations for deploying essential services like MySQL, MariaDB, phpMyAdmin, Pi-hole, Portainer, PostgreSQL, Prometheus, and Grafana with ease.
