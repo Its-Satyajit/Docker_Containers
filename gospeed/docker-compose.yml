@@ -6,7 +6,7 @@ services:
     ports:
       - "9999:9999"
     volumes:
-      - /home/satyajit/Downloads:/app/Downloads
+      - /home/satyajit/Downloads/gospeed:/app/Downloads
       - ./storage:/app/storage
     # command: ["-u", "admin", "-p", "123456"]
     restart: unless-stopped
