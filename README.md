@@ -49,7 +49,7 @@ Each directory contains a `docker-compose.yml` file configured for a specific se
 
 **Directory**: `gospeed/`
 
-Deploy [GoSpeed](https://github.com/liwei2633/gopeed), a high-performance download manager with a user-friendly web interface.
+Deploy [GoSpeed](https://github.com/GopeedLab/gopeed), a high-performance download manager with a user-friendly web interface.
 
 -   **Key Features**:
     -   **Ports**: Access the GoSpeed UI at `http://localhost:9999`.
