@@ -47,6 +47,7 @@ services:
     restart: always
     networks:
       - backend
+    command: --interval 7200
 
 networks:
   backend:
