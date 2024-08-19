@@ -8,7 +8,7 @@ services:
     ports:
       - "3306:3306"
     volumes:
-      - ./mariadb_data:/var/lib/mysql
+      - mariadb_data:/var/lib/mysql
     networks:
       - backend
 
@@ -21,7 +21,7 @@ services:
     ports:
       - "3307:3306"
     volumes:
-      - ./mysql_data:/var/lib/mysql
+      - mysql_data:/var/lib/mysql
     networks:
       - backend
 
@@ -35,8 +35,6 @@ services:
       UPLOAD_LIMIT: 2G
     ports:
       - "8080:80"
-    # volumes:
-    #   - ./phpmyadmin_data:/usr/local/etc/php
     networks:
       - backend
 
@@ -55,4 +53,3 @@ networks:
 volumes:
   mariadb_data:
   mysql_data:
-  # phpmyadmin_data:
