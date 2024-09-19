@@ -1,36 +1,42 @@
+networks:
+  dns_net:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.0.0/16
+
 services:
   pihole:
-    image: pihole/pihole:2024.07.0
     container_name: pihole
+    hostname: pihole
+    image: pihole/pihole:2024.07.0
+    networks:
+      dns_net:
+        ipv4_address: 172.20.0.100
     ports:
       - "53:53/tcp"
       - "53:53/udp"
       - "67:67/udp"
       - "80:80/tcp"
     environment:
-      TZ: "Asia/Kolkata"
-      WEBPASSWORD: "password"
+      - "TZ=Asia/Kolkata"
+      - "WEBPASSWORD=password"
+      - "DNS1=172.20.0.7#5053"
+      - "DNS2=no"
     volumes:
-      - './etc-pihole/:/etc/pihole/'
-      - './etc-dnsmasq.d/:/etc/dnsmasq.d/'
+      - "./etc-pihole/:/etc/pihole/"
+      - "./etc-dnsmasq.d/:/etc/dnsmasq.d/"
     restart: unless-stopped
-    networks:
-      pihole_network:
-        ipv4_address: 172.20.0.100
 
-  watchtower:
-    image: containrrr/watchtower:1.7.1
-    container_name: pihole_watchtower
-    restart: always
+  unbound:
+    container_name: unbound
+    image: mvance/unbound:1.20.0
+    networks:
+      dns_net:
+        ipv4_address: 172.20.0.7
     volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-    command: --cleanup
-    networks:
-      - pihole_network
-
-networks:
-  pihole_network:
-    driver: bridge
-    ipam:
-      config:
-        - subnet: 172.20.0.0/16
+      - ./unbound:/etc/unbound
+    ports:
+      - "5053:53/tcp"
+      - "5053:53/udp"
+    restart: unless-stopped
