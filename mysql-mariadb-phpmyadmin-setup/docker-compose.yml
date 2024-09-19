@@ -1,6 +1,6 @@
 services:
   mariadb:
-    image: mariadb:11.5-ubi9
+    image: mariadb:latest
     container_name: mariadb
     restart: always
     environment:
@@ -13,7 +13,7 @@ services:
       - backend
 
   mysql:
-    image: mysql:9.0.1
+    image: mysql:latest
     container_name: mysql
     restart: always
     environment:
@@ -26,7 +26,8 @@ services:
       - backend
 
   phpmyadmin:
-    image: phpmyadmin/phpmyadmin:5.2.1
+    image: phpmyadmin/phpmyadmin:latest
+    container_name: phpmyadmin
     restart: always
     environment:
       PMA_HOSTS: mariadb, mysql
@@ -35,18 +36,9 @@ services:
       UPLOAD_LIMIT: 2G
     ports:
       - "8080:80"
-  
-    networks:
-      - backend
 
-  watchtower:
-    image: containrrr/watchtower:1.7.1
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-    restart: always
     networks:
       - backend
-    command: --interval 7200
 
 networks:
   backend:
@@ -54,4 +46,3 @@ networks:
 volumes:
   mariadb_data:
   mysql_data:
-
