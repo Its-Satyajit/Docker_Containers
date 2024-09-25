@@ -1,0 +1,9 @@
+services:
+  apache:
+    image: httpd:latest
+    ports:
+      - "80:80"
+    volumes:
+      - ./data/html:/usr/local/apache2/htdocs
+      - ./data/httpd.conf:/usr/local/apache2/conf/httpd.conf
+    restart: unless-stopped

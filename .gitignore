@@ -1,9 +1,5 @@
-/db-setup/mariadb_data
-/db-setup/mysql_data
-/pihole-setup/etc-dnsmasq.d
-/pihole-setup/etc-pihole
-/postgresql-setup/postgres-data
-/gospeed/storage
-/mysql-mariadb-phpmyadmin-setup/mariadb_data
-/mysql-mariadb-phpmyadmin-setup/mysql_data
-/grafana
+mysql_data
+mariadb_data
+etc-dnsmasq.d
+etc-pihole
+postgres-data
