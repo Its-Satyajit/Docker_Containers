@@ -1,21 +1,143 @@
-# Docker Compose Configurations for Essential Services
+# Docker and Docker Compose Documentation
 
-This repository provides pre-configured Docker Compose setups for various essential services including GoSpeed, MySQL Chaining (with MariaDB and phpMyAdmin), Pi-hole, Portainer, PostgreSQL, and a monitoring stack featuring Prometheus and Grafana.
+This repository provides pre-configured Docker Compose setups for various essential services, including GoSpeed, MySQL with MariaDB and phpMyAdmin, Pi-hole, Portainer, PostgreSQL, and a monitoring stack featuring Prometheus and Grafana.
 
 ## Table of Contents
 
-1. [Repository Structure](#repository-structure)
-2. [Setup Overviews](#setup-overviews)
-    - [GoSpeed Setup](#gospeed-setup)
-    - [MySQL, MariaDB & phpMyAdmin Setup](#mysql-mariadb-phpmyadmin-setup)
-    - [Pi-hole Setup](#pihole-setup)
-    - [Portainer Setup](#portainer-setup)
-    - [PostgreSQL Setup](#postgresql-setup)
-    - [Prometheus & Grafana Monitoring Stack](#prometheus-grafana-monitoring-stack)
-3. [Usage Instructions](#usage-instructions)
-4. [Dependency Management with Renovate](#dependency-management-with-renovate)
-5. [Contributing & Support](#contributing--support)
-6. [License](#license)
+1. [Installing Docker and Docker Compose](#installing-docker-and-docker-compose)
+2. [Post-Installation Steps](#post-installation-steps)
+3. [Repository Structure](#repository-structure)
+4. [Setup Overviews](#setup-overviews)
+   - [GoSpeed Setup](#gospeed-setup)
+   - [MySQL, MariaDB & phpMyAdmin Setup](#mysql-mariadb-phpmyadmin-setup)
+   - [Pi-hole Setup](#pihole-setup)
+   - [Portainer Setup](#portainer-setup)
+   - [PostgreSQL Setup](#postgresql-setup)
+   - [Prometheus & Grafana Monitoring Stack](#prometheus-grafana-monitoring-stack)
+5. [Usage Instructions](#usage-instructions)
+6. [Dependency Management with Renovate](#dependency-management-with-renovate)
+7. [Contributing & Support](#contributing--support)
+8. [License](#license)
+
+## Installing Docker and Docker Compose
+
+### Windows
+
+1. **Download Docker Desktop** from [Docker Hub](https://hub.docker.com/).
+2. **Run the Installer** and follow the instructions.
+3. **Verify Installation**:
+   ```bash
+   docker --version
+   docker-compose --version
+   ```
+
+### macOS
+
+1. **Download Docker Desktop** from [Docker Hub](https://hub.docker.com/).
+2. **Open the `.dmg` file** and drag Docker to Applications.
+3. **Verify Installation**:
+   ```bash
+   docker --version
+   docker-compose --version
+   ```
+
+### Ubuntu
+
+1. **Remove Old Versions**:
+   ```bash
+   sudo apt remove docker docker-engine docker.io containerd runc
+   ```
+2. **Install Required Packages**:
+   ```bash
+   sudo apt update
+   sudo apt install apt-transport-https ca-certificates curl software-properties-common
+   ```
+3. **Add Docker’s GPG Key and Repository**:
+   ```bash
+   curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+   sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
+   ```
+4. **Install Docker**:
+   ```bash
+   sudo apt update
+   sudo apt install docker-ce docker-compose
+   ```
+
+### CentOS
+
+1. **Remove Old Versions**:
+   ```bash
+   sudo yum remove docker docker-common docker-selinux docker-engine
+   ```
+2. **Set up the Stable Repository**:
+   ```bash
+   sudo yum install -y yum-utils
+   sudo yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
+   ```
+3. **Install Docker**:
+   ```bash
+   sudo yum install docker-ce
+   sudo systemctl start docker
+   sudo systemctl enable docker
+   ```
+4. **Install Docker Compose**:
+   ```bash
+   sudo curl -L "https://github.com/docker/compose/releases/latest/download/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+   sudo chmod +x /usr/local/bin/docker-compose
+   ```
+
+### Additional Platforms
+
+For installation on other distributions (Debian, Fedora, Arch Linux, etc.), please refer to the official [Docker documentation](https://docs.docker.com/get-docker/).
+
+## Post-Installation Steps
+
+1. **Manage Docker as a Non-Root User**:
+
+   ```bash
+   sudo usermod -aG docker $USER
+   ```
+
+   Log out and back in for changes to take effect.
+
+2. **Verify Docker Installation**:
+
+   ```bash
+   docker run hello-world
+   ```
+
+3. **Configure Docker to Start on Boot**:
+
+   ```bash
+   sudo systemctl enable docker
+   ```
+
+4. **Check Docker Service Status**:
+
+   ```bash
+   sudo systemctl status docker
+   ```
+
+5. **Explore Docker Commands**:
+
+   ```bash
+   docker --help
+   docker ps
+   docker ps -a
+   ```
+
+6. **Install Docker Compose (if not done earlier)**:
+
+   ```bash
+   sudo curl -L "https://github.com/docker/compose/releases/latest/download/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+   sudo chmod +x /usr/local/bin/docker-compose
+   ```
+
+7. **Security Practices**:
+   Review Docker security best practices.
+
+8. **Regular Maintenance**:
+   Keep Docker updated with your package manager.
 
 ## Repository Structure
 
@@ -41,106 +163,70 @@ This repository is organized as follows:
 └── renovate.json
 ```
 
-Each directory contains a `docker-compose.yml` file configured for a specific service or stack.
-
 ## Setup Overviews
 
 ### GoSpeed Setup
 
 **Directory**: `gospeed/`
 
-Deploy [GoSpeed](https://github.com/GopeedLab/gopeed), a high-performance download manager with a user-friendly web interface.
-
--   **Key Features**:
-    -   **Ports**: Access the GoSpeed UI at `http://localhost:9999`.
-    -   **Volumes**:
-        -   `/home/satyajit/Downloads:/app/Downloads` - Maps local downloads to the container.
-        -   `./storage:/app/storage` - Persistent storage for GoSpeed.
-    -   **Auto-Update**: Integrated with Watchtower for automatic updates.
+- Deploy [GoSpeed](https://github.com/GopeedLab/gopeed).
+- Access UI at `http://localhost:9999`.
 
 ### MySQL, MariaDB & phpMyAdmin Setup
 
 **Directory**: `mysql-mariadb-phpmyadmin-setup/`
 
-Easily set up MySQL and MariaDB databases with [phpMyAdmin](https://www.phpmyadmin.net/) for web-based database management.
-
--   **Key Features**:
-    -   **MySQL & MariaDB**:
-        -   MySQL: Accessible on port `3307`.
-        -   MariaDB: Accessible on port `3306`.
-    -   **phpMyAdmin**: Manage your databases via a web interface at `http://localhost:8080`.
-    -   **Data Persistence**: Stores data in volumes to ensure it persists across container restarts.
-    -   **Isolated Network**: Services communicate securely over a custom backend network.
-    -   **Watchtower**: Automates the update process for all services.
+- Set up MySQL and MariaDB with [phpMyAdmin](https://www.phpmyadmin.net/).
+- Access phpMyAdmin at `http://localhost:8080`.
 
 ### Pi-hole Setup
 
 **Directory**: `pihole-setup/`
 
-Deploy [Pi-hole](https://pi-hole.net/) to block ads and enhance your network’s performance.
-
--   **Key Features**:
-    -   **DNS and Web Services**: Exposes DNS (ports `53/tcp`, `53/udp`) and web interface (port `80`).
-    -   **Volume Mapping**: Configuration and data are stored persistently across reboots.
-    -   **Network Configuration**: Custom network and IP settings for secure and reliable operations.
-    -   **Watchtower**: Keeps Pi-hole up-to-date automatically.
+- Deploy [Pi-hole](https://pi-hole.net/) for ad blocking.
+- Access web interface at `http://localhost`.
 
 ### Portainer Setup
 
 **Directory**: `portainer-setup/`
 
-Manage your Docker containers and services with ease using [Portainer](https://www.portainer.io/).
-
--   **Key Features**:
-    -   **Web Interface**:
-        -   Portainer agent accessible at `http://localhost:8081`.
-        -   Main UI accessible at `http://localhost:9000`.
-    -   **Persistent Data**: Stores Portainer data persistently with mapped volumes.
-    -   **Automated Updates**: Integrated Watchtower service for automatic updates.
+- Manage Docker containers using [Portainer](https://www.portainer.io/).
+- Access Portainer at `http://localhost:9000`.
 
 ### PostgreSQL Setup
 
 **Directory**: `postgresql-setup/`
 
-Set up a PostgreSQL database for reliable and scalable data management.
-
--   **Key Features**:
-    -   **Database Service**: PostgreSQL available on port `5432`.
-    -   **Data Persistence**: Data is stored in `./postgres-data` to persist across container restarts.
+- Set up a PostgreSQL database.
+- Access PostgreSQL on port `5432`.
 
 ### Prometheus & Grafana Monitoring Stack
 
 **Directory**: `prometheus-grafana-setup/`
 
-Monitor your systems and visualize metrics using [Prometheus](https://prometheus.io/) and [Grafana](https://grafana.com/).
-
--   **Key Features**:
-    -   **Prometheus**: Metrics collection, exposed at `http://localhost:7070`.
-    -   **Grafana**: Dashboard for visualization, accessible at `http://localhost:7071`.
-    -   **cAdvisor**: Container monitoring available at `http://localhost:7072`.
-    -   **Persistent Storage**: Ensures metric retention later review and analysis.
-    -   **Custom Network**: All services are networked securely for efficient monitoring.
+- Monitor systems with [Prometheus](https://prometheus.io/) and [Grafana](https://grafana.com/).
+- Access Prometheus at `http://localhost:7070` and Grafana at `http://localhost:7071`.
 
 ## Usage Instructions
 
-1. **Choose a Service Directory**: Navigate to the directory of the service you want to set up.
-2. **Customize Configurations**: Edit the `docker-compose.yml` file if necessary to fit your environment.
+1. **Choose a Service Directory**: Navigate to the desired service directory.
+2. **Customize Configurations**: Edit `docker-compose.yml` as needed.
 3. **Deploy the Service**:
-    ```bash
-    docker-compose up -d
-    ```
+   ```bash
+   docker-compose up -d
+   ```
 4. **Stop the Service**:
-    ```bash
-    docker-compose down
-    ```
+   ```bash
+   docker-compose down
+   ```
 
 ## Dependency Management with Renovate
 
-This repository uses [Renovate](https://renovatebot.com/) to automatically update Docker images and dependencies. The configuration is defined in `renovate.json`, which you can customize to suit your needs.
+This repository uses [Renovate](https://renovatebot.com/) to automatically update Docker images and dependencies. The configuration is defined in `renovate.json`.
 
 ## Contributing & Support
 
-Contributions are welcome! If you have suggestions or encounter any issues, feel free to open an issue or submit a pull request. For direct support, please use the issue tracker in the repository.
+Contributions are welcome! For suggestions or issues, please open an issue or submit a pull request.
 
 ## License
 
