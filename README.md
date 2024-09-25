@@ -27,8 +27,8 @@ This repository provides pre-configured Docker Compose setups for various essent
 2. **Run the Installer** and follow the instructions.
 3. **Verify Installation**:
    ```bash
-   docker --version
-   docker-compose --version
+   docker --version  # Check the installed Docker version
+   docker-compose --version  # Check the installed Docker Compose version
    ```
 
 ### macOS
@@ -37,53 +37,72 @@ This repository provides pre-configured Docker Compose setups for various essent
 2. **Open the `.dmg` file** and drag Docker to Applications.
 3. **Verify Installation**:
    ```bash
-   docker --version
-   docker-compose --version
+   docker --version  # Check the installed Docker version
+   docker-compose --version  # Check the installed Docker Compose version
    ```
 
 ### Ubuntu
 
 1. **Remove Old Versions**:
    ```bash
-   sudo apt remove docker docker-engine docker.io containerd runc
+   sudo apt remove docker docker-engine docker.io containerd runc  # Clean up old installations
    ```
 2. **Install Required Packages**:
    ```bash
-   sudo apt update
-   sudo apt install apt-transport-https ca-certificates curl software-properties-common
+   sudo apt update  # Update package list
+   sudo apt install apt-transport-https ca-certificates curl software-properties-common  # Install prerequisites
    ```
 3. **Add Docker’s GPG Key and Repository**:
    ```bash
-   curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
-   sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
+   curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -  # Add Docker’s GPG key
+   sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"  # Add Docker repository
    ```
-4. **Install Docker**:
+4. **Install Docker and Docker Compose**:
    ```bash
-   sudo apt update
-   sudo apt install docker-ce docker-compose
+   sudo apt update  # Update package list again
+   sudo apt install docker-ce docker-compose  # Install Docker and Docker Compose
    ```
 
 ### CentOS
 
 1. **Remove Old Versions**:
    ```bash
-   sudo yum remove docker docker-common docker-selinux docker-engine
+   sudo yum remove docker docker-common docker-selinux docker-engine  # Clean up old installations
    ```
 2. **Set up the Stable Repository**:
    ```bash
-   sudo yum install -y yum-utils
-   sudo yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
+   sudo yum install -y yum-utils  # Install required utilities
+   sudo yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo  # Add Docker repository
    ```
 3. **Install Docker**:
    ```bash
-   sudo yum install docker-ce
-   sudo systemctl start docker
-   sudo systemctl enable docker
+   sudo yum install docker-ce  # Install Docker
+   sudo systemctl start docker  # Start Docker service
+   sudo systemctl enable docker  # Enable Docker to start on boot
    ```
 4. **Install Docker Compose**:
    ```bash
-   sudo curl -L "https://github.com/docker/compose/releases/latest/download/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
-   sudo chmod +x /usr/local/bin/docker-compose
+   sudo yum install docker-compose  # Install Docker Compose via package manager
+   ```
+
+### openSUSE
+
+1. **Remove Old Versions**:
+   ```bash
+   sudo zypper rm docker docker-engine docker-selinux  # Clean up old installations
+   ```
+2. **Install Docker**:
+   ```bash
+   sudo zypper install docker  # Install Docker
+   ```
+3. **Start Docker**:
+   ```bash
+   sudo systemctl start docker  # Start Docker service
+   sudo systemctl enable docker  # Enable Docker to start on boot
+   ```
+4. **Install Docker Compose**:
+   ```bash
+   sudo zypper install docker-compose  # Install Docker Compose via package manager
    ```
 
 ### Additional Platforms
@@ -95,7 +114,7 @@ For installation on other distributions (Debian, Fedora, Arch Linux, etc.), plea
 1. **Manage Docker as a Non-Root User**:
 
    ```bash
-   sudo usermod -aG docker $USER
+   sudo usermod -aG docker $USER  # Add current user to the Docker group for non-root access
    ```
 
    Log out and back in for changes to take effect.
@@ -103,41 +122,34 @@ For installation on other distributions (Debian, Fedora, Arch Linux, etc.), plea
 2. **Verify Docker Installation**:
 
    ```bash
-   docker run hello-world
+   docker run hello-world  # Run a test container to verify installation
    ```
 
 3. **Configure Docker to Start on Boot**:
 
    ```bash
-   sudo systemctl enable docker
+   sudo systemctl enable docker  # Set Docker to start automatically on boot
    ```
 
 4. **Check Docker Service Status**:
 
    ```bash
-   sudo systemctl status docker
+   sudo systemctl status docker  # Check if Docker service is running
    ```
 
 5. **Explore Docker Commands**:
 
    ```bash
-   docker --help
-   docker ps
-   docker ps -a
+   docker --help  # Display available Docker commands
+   docker ps  # List running containers
+   docker ps -a  # List all containers, including stopped ones
    ```
 
-6. **Install Docker Compose (if not done earlier)**:
+6. **Security Practices**:
+   Review Docker security best practices to protect your environment.
 
-   ```bash
-   sudo curl -L "https://github.com/docker/compose/releases/latest/download/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
-   sudo chmod +x /usr/local/bin/docker-compose
-   ```
-
-7. **Security Practices**:
-   Review Docker security best practices.
-
-8. **Regular Maintenance**:
-   Keep Docker updated with your package manager.
+7. **Regular Maintenance**:
+   Keep Docker updated with your package manager to ensure you have the latest features and security patches.
 
 ## Repository Structure
 
@@ -213,11 +225,11 @@ This repository is organized as follows:
 2. **Customize Configurations**: Edit `docker-compose.yml` as needed.
 3. **Deploy the Service**:
    ```bash
-   docker-compose up -d
+   docker-compose up -d  # Start services in detached mode
    ```
 4. **Stop the Service**:
    ```bash
-   docker-compose down
+   docker-compose down  # Stop and remove the containers
    ```
 
 ## Dependency Management with Renovate
