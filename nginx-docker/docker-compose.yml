@@ -1,6 +1,6 @@
 services:
   nginx:
-    image: nginx:latest
+    image: nginx:stable-perl
     ports:
       - "80:80"
     volumes:

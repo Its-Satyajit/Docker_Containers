@@ -1,6 +1,6 @@
 services:
   mariadb:
-    image: mariadb:latest
+    image: mariadb:lts-ubi9
     container_name: mariadb
     restart: always
     environment:
@@ -13,7 +13,7 @@ services:
       - backend
 
   mysql:
-    image: mysql:latest
+    image: mysql:8.0.39-debian
     container_name: mysql
     restart: always
     environment:
@@ -26,7 +26,7 @@ services:
       - backend
 
   phpmyadmin:
-    image: phpmyadmin/phpmyadmin:latest
+    image: phpmyadmin/phpmyadmin:5.2.1
     container_name: phpmyadmin
     restart: always
     environment:
