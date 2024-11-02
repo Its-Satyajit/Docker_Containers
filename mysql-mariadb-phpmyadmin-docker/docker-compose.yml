@@ -4,13 +4,21 @@ services:
     container_name: mariadb
     restart: always
     environment:
-      MARIADB_ROOT_PASSWORD: password
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: test_db        # Added default database
+      MYSQL_USER: user              # Added non-root user
+      MYSQL_PASSWORD: password      # Password for non-root user
     ports:
       - "3306:3306"
     volumes:
-      - ./mariadb_data:/var/lib/mysql
+      - mariadb_data:/var/lib/mysql
     networks:
       - backend
+    healthcheck:                    # Added healthcheck
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p$$MYSQL_ROOT_PASSWORD"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
 
   mysql:
     image: mysql:8.0.40-debian
@@ -18,30 +26,42 @@ services:
     restart: always
     environment:
       MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: test_db
+      MYSQL_USER: user
+      MYSQL_PASSWORD: password
     ports:
       - "3307:3306"
     volumes:
-      - ./mysql_data:/var/lib/mysql
+      - mysql_data:/var/lib/mysql
     networks:
       - backend
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p$$MYSQL_ROOT_PASSWORD"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
 
   phpmyadmin:
     image: phpmyadmin/phpmyadmin:5.2.1
     container_name: phpmyadmin
     restart: always
     environment:
-      PMA_HOSTS: mariadb, mysql
-      PMA_USER: root
-      PMA_PASSWORD: password
-      UPLOAD_LIMIT: 2G
+      - PMA_ARBITRARY=1           # Allow connecting to arbitrary servers
+      - PMA_HOST=mariadb         # Default host
+      - MYSQL_ROOT_PASSWORD=password
     ports:
       - "8080:80"
-
+    depends_on:
+      mariadb:
+        condition: service_healthy
+      mysql:
+        condition: service_healthy
     networks:
       - backend
 
 networks:
   backend:
+    driver: bridge
 
 volumes:
   mariadb_data:
