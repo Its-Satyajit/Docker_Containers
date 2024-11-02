@@ -5,17 +5,18 @@ services:
     restart: always
     environment:
       MYSQL_ROOT_PASSWORD: password
-      MYSQL_DATABASE: test_db        # Added default database
-      MYSQL_USER: user              # Added non-root user
-      MYSQL_PASSWORD: password      # Password for non-root user
+      MYSQL_DATABASE: test_db # Added default database
+      MYSQL_USER: user # Added non-root user
+      MYSQL_PASSWORD: password # Password for non-root user
     ports:
       - "3306:3306"
     volumes:
       - mariadb_data:/var/lib/mysql
     networks:
       - backend
-    healthcheck:                    # Added healthcheck
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p$$MYSQL_ROOT_PASSWORD"]
+    healthcheck:
+      # Added healthcheck
+      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p$$MYSQL_ROOT_PASSWORD" ]
       interval: 5s
       timeout: 5s
       retries: 5
@@ -36,7 +37,7 @@ services:
     networks:
       - backend
     healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p$$MYSQL_ROOT_PASSWORD"]
+      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p$$MYSQL_ROOT_PASSWORD" ]
       interval: 5s
       timeout: 5s
       retries: 5
@@ -46,9 +47,10 @@ services:
     container_name: phpmyadmin
     restart: always
     environment:
-      - PMA_ARBITRARY=1           # Allow connecting to arbitrary servers
-      - PMA_HOST=mariadb         # Default host
+      - PMA_ARBITRARY=1 # Allow connecting to arbitrary servers 
+      - PMA_HOST=mariadb # Default host
       - MYSQL_ROOT_PASSWORD=password
+      - UPLOAD_LIMIT=2G # Increase upload limit
     ports:
       - "8080:80"
     depends_on:
