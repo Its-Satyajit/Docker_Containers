@@ -15,7 +15,6 @@ services:
       retries: 3
       timeout: 10s
       start_period: 40s
-      failure_threshold: 3
 
   watchtower:
     image: containrrr/watchtower:1.7.1
