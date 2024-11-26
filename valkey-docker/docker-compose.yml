@@ -1,0 +1,16 @@
+
+services:
+  valkey:
+    image: valkey/valkey:8.0.1
+    container_name: valkey-server
+    ports:
+      - "6379:6379"
+    volumes:
+      - ./valkey.conf:/usr/local/etc/valkey/valkey.conf
+    restart: always
+    healthcheck:
+      test: ["CMD", "valkey-cli", "PING"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 30s
