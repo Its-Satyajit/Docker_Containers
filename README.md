@@ -240,6 +240,8 @@ This repository uses [Renovate](https://renovatebot.com/) to automatically updat
 
 Contributions are welcome! For suggestions or issues, please open an issue or submit a pull request.
 
+![Alt](https://repobeats.axiom.co/api/embed/81de01a865170163592eae1a9e5c6a98f5893f31.svg "Repobeats analytics image")
+
 ## License
 
 This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for more details.
