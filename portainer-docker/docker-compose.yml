@@ -9,6 +9,13 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - portainer_data:/data
+    healthcheck:
+      test: ["CMD", "curl", "--silent", "--fail", "http://localhost:9000/api/status"]
+      interval: 30s
+      retries: 3
+      timeout: 10s
+      start_period: 40s
+      failure_threshold: 3
 
   watchtower:
     image: containrrr/watchtower:1.7.1
