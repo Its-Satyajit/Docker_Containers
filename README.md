@@ -1,5 +1,3 @@
-Here is the updated `README.md` file, incorporating the new services and maintaining the Docker setup steps:
-
 ## Docker and Docker Compose Documentation
 
 This repository provides pre-configured Docker Compose setups for various essential services, including Apache, GoSpeed, MySQL with MariaDB and phpMyAdmin, MongoDB, Nginx, Pi-hole, Portainer, PostgreSQL, Prometheus and Grafana, and more.
