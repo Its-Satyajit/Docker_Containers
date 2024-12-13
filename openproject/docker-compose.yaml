@@ -2,7 +2,7 @@
 
 services:
   openproject:
-    image: openproject/community:12
+    image: openproject/community:13
     container_name: openproject
     restart: always
     environment:
