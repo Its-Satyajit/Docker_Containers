@@ -1,6 +1,8 @@
-# Docker and Docker Compose Documentation
+Here is the updated `README.md` file, incorporating the new services and maintaining the Docker setup steps:
 
-This repository provides pre-configured Docker Compose setups for various essential services, including GoSpeed, MySQL with MariaDB and phpMyAdmin, Pi-hole, Portainer, PostgreSQL, and a monitoring stack featuring Prometheus and Grafana.
+## Docker and Docker Compose Documentation
+
+This repository provides pre-configured Docker Compose setups for various essential services, including Apache, GoSpeed, MySQL with MariaDB and phpMyAdmin, MongoDB, Nginx, Pi-hole, Portainer, PostgreSQL, Prometheus and Grafana, and more.
 
 ## Table of Contents
 
@@ -8,12 +10,6 @@ This repository provides pre-configured Docker Compose setups for various essent
 2. [Post-Installation Steps](#post-installation-steps)
 3. [Repository Structure](#repository-structure)
 4. [Setup Overviews](#setup-overviews)
-   - [GoSpeed Setup](#gospeed-setup)
-   - [MySQL, MariaDB & phpMyAdmin Setup](#mysql-mariadb-phpmyadmin-setup)
-   - [Pi-hole Setup](#pihole-setup)
-   - [Portainer Setup](#portainer-setup)
-   - [PostgreSQL Setup](#postgresql-setup)
-   - [Prometheus & Grafana Monitoring Stack](#prometheus-grafana-monitoring-stack)
 5. [Usage Instructions](#usage-instructions)
 6. [Dependency Management with Renovate](#dependency-management-with-renovate)
 7. [Contributing & Support](#contributing--support)
@@ -23,7 +19,7 @@ This repository provides pre-configured Docker Compose setups for various essent
 
 ### Windows
 
-1. **Download Docker Desktop** from [Docker Hub](https://hub.docker.com/).
+1. **Download Docker Desktop** from [Docker](https://docs.docker.com/get-started/get-docker/).
 2. **Run the Installer** and follow the instructions.
 3. **Verify Installation**:
    ```bash
@@ -33,7 +29,7 @@ This repository provides pre-configured Docker Compose setups for various essent
 
 ### macOS
 
-1. **Download Docker Desktop** from [Docker Hub](https://hub.docker.com/).
+1. **Download Docker Desktop** from [Docker](https://docs.docker.com/get-started/get-docker/).
 2. **Open the `.dmg` file** and drag Docker to Applications.
 3. **Verify Installation**:
    ```bash
@@ -157,72 +153,137 @@ This repository is organized as follows:
 
 ```plaintext
 .
-├── gospeed
+├── apache-docker
 │   └── docker-compose.yml
-├── mysql-mariadb-phpmyadmin-setup
+├── docs
+│   ├── apache-docker
+│   ├── gospeed-docker
+│   ├── mongo-docker
+│   ├── mysql-mariadb-phpmyadmin-docker
+│   ├── nginx-docker
+│   ├── pihole-docker
+│   ├── portainer-docker
+│   ├── postgresql-docker
+│   ├── prometheus-grafana-docker
+│   └── renovate-documentation.md
+├── generate_docs.py
+├── gospeed-docker
 │   └── docker-compose.yml
-├── pihole-setup
+├── LICENSE
+├── mongo-docker
 │   └── docker-compose.yml
-├── portainer-setup
+├── mysql-mariadb-phpmyadmin-docker
+│   ├── docker-compose.yml
+│   ├── mariadb_data
+│   └── mysql_data
+├── nginx-docker
 │   └── docker-compose.yml
-├── postgresql-setup
+├── openproject
+│   └── docker-compose.yaml
+├── pihole-docker
+│   ├── docker-compose.yml
+│   ├── etc-dnsmasq.d
+│   └── etc-pihole
+├── portainer-docker
 │   └── docker-compose.yml
-├── prometheus-grafana-setup
+├── postgresql-docker
+│   ├── docker-compose.yml
+│   └── postgres-data
+├── prometheus-grafana-docker
 │   ├── docker-compose.yml
 │   └── prometheus
-│       └── prometheus.yml
 ├── README.md
-└── renovate.json
+├── renovate.json
+└── valkey-docker
+    ├── docker-compose.yml
+    └── valkey.conf
 ```
 
 ## Setup Overviews
 
+### Apache Setup
+
+**Directory**: `apache-docker/`
+
+- Deploy an Apache web server.
+- Access the web server at `http://localhost:80` (or the port specified in `docker-compose.yml`).
+
 ### GoSpeed Setup
 
-**Directory**: `gospeed/`
+**Directory**: `gospeed-docker/`
 
-- Deploy [GoSpeed](https://github.com/GopeedLab/gopeed).
-- Access UI at `http://localhost:9999`.
+- Deploy [GoSpeed](https://github.com/GopeedLab/gopeed), a high-speed downloader developed with Golang and Flutter.
+  - Supports HTTP, BitTorrent, and Magnet protocols.
+  - Access UI at `http://localhost:9999`.
+
+### MongoDB Setup
+
+**Directory**: `mongo-docker/`
+
+- Set up a MongoDB database.
+- Access MongoDB on port `27017`.
 
 ### MySQL, MariaDB & phpMyAdmin Setup
 
-**Directory**: `mysql-mariadb-phpmyadmin-setup/`
+**Directory**: `mysql-mariadb-phpmyadmin-docker/`
 
-- Set up MySQL and MariaDB with [phpMyAdmin](https://www.phpmyadmin.net/).
-- Access phpMyAdmin at `http://localhost:8080`.
+- Set up MySQL and MariaDB with [phpMyAdmin][2].
+  - phpMyAdmin is a free software tool written in PHP to handle MySQL and MariaDB administration over the web.
+  - Access phpMyAdmin at `http://localhost:8080`.
+
+### Nginx Setup
+
+**Directory**: `nginx-docker/`
+
+- Deploy an Nginx web server.
+- Access the web server at `http://localhost:80` (or the port specified in `docker-compose.yml`).
 
 ### Pi-hole Setup
 
-**Directory**: `pihole-setup/`
+**Directory**: `pihole-docker/`
 
 - Deploy [Pi-hole](https://pi-hole.net/) for ad blocking.
 - Access web interface at `http://localhost`.
 
 ### Portainer Setup
 
-**Directory**: `portainer-setup/`
+**Directory**: `portainer-docker/`
 
 - Manage Docker containers using [Portainer](https://www.portainer.io/).
 - Access Portainer at `http://localhost:9000`.
 
 ### PostgreSQL Setup
 
-**Directory**: `postgresql-setup/`
+**Directory**: `postgresql-docker/`
 
 - Set up a PostgreSQL database.
 - Access PostgreSQL on port `5432`.
 
 ### Prometheus & Grafana Monitoring Stack
 
-**Directory**: `prometheus-grafana-setup/`
+**Directory**: `prometheus-grafana-docker/`
 
 - Monitor systems with [Prometheus](https://prometheus.io/) and [Grafana](https://grafana.com/).
-- Access Prometheus at `http://localhost:7070` and Grafana at `http://localhost:7071`.
+  - Access Prometheus at `http://localhost:7070` and Grafana at `http://localhost:7071`.
+
+### OpenProject Setup
+
+**Directory**: `openproject/`
+
+- Deploy [OpenProject](https://www.openproject.org/), a project management tool.
+- Access OpenProject at the specified port in `docker-compose.yml`.
+
+### Valkey Setup
+
+**Directory**: `valkey-docker/`
+
+- Deploy Valkey
+- Access Valkey at the specified port in `docker-compose.yml`.
 
 ## Usage Instructions
 
 1. **Choose a Service Directory**: Navigate to the desired service directory.
-2. **Customize Configurations**: Edit `docker-compose.yml` as needed.
+2. **Customize Configurations**: Edit `docker-compose.yml` as needed to adjust ports, volumes, environment variables, etc.
 3. **Deploy the Service**:
    ```bash
    docker-compose up -d  # Start services in detached mode
@@ -232,13 +293,63 @@ This repository is organized as follows:
    docker-compose down  # Stop and remove the containers
    ```
 
+## Docker Compose File Structure
+
+For those interested in understanding the structure of the `docker-compose.yml` files, here is a brief overview:
+
+- **Version**: Specifies the version of the Docker Compose file format.
+  ```yaml
+  version: '3'
+  ```
+- **Services**: Defines individual containers or services.
+  ```yaml
+  services:
+    web:
+      build: .
+      ports:
+        - "8080:8080"
+      volumes:
+        - .:/code
+  ```
+- **Build**: Specifies the location of the Dockerfile if you are building a custom image.
+  ```yaml
+  build:
+    context: .
+    dockerfile: ./docker/Dockerfile
+  ```
+- **Image**: Specifies a pre-built image to use.
+  ```yaml
+  image: mysql/mysql-server:5.8
+  ```
+- **Environment**: Sets environment variables for the container.
+  ```yaml
+  environment:
+    - MYSQL_ROOT_PASSWORD=root
+    - MYSQL_USER=ashok
+    - MYSQL_PASSWORD=waytoeasylearn
+    - MYSQL_DATABASE=backend
+  ```
+- **Volumes**: Mounts volumes to persist data.
+  ```yaml
+  volumes:
+    - "/home/ashok/docker/app/db/init.sql:/opt/app/init.sql"
+  ```
+- **Networks**: Defines custom networks for services to communicate over.
+  ```yaml
+  networks:
+    my-network:
+      driver: bridge
+  ```
+
+For more detailed information, refer to the [Docker Compose YAML documentation][5].
+
 ## Dependency Management with Renovate
 
 This repository uses [Renovate](https://renovatebot.com/) to automatically update Docker images and dependencies. The configuration is defined in `renovate.json`.
 
 ## Contributing & Support
 
-Contributions are welcome! For suggestions or issues, please open an issue or submit a pull request.
+Contributions are welcome For suggestions or issues, please open an issue or submit a pull request.
 
 ![Alt](https://repobeats.axiom.co/api/embed/81de01a865170163592eae1a9e5c6a98f5893f31.svg "Repobeats analytics image")
 
