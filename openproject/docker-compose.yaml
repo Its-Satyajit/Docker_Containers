@@ -1,0 +1,42 @@
+
+
+services:
+  openproject:
+    image: openproject/community:12
+    container_name: openproject
+    restart: always
+    environment:
+      - DATABASE_URL=postgresql://openproject:openproject@db:5432/openproject
+      - SECRET_KEY_BASE=some_random_secret_key
+      - OPENPROJECT_DB_ADAPTER=postgresql
+      - OPENPROJECT_DB_ENCODING=utf8
+      - OPENPROJECT_DB_POOL=10
+    ports:
+      - "8082:80"
+    depends_on:
+      - db
+    volumes:
+      - openproject_data:/var/db/openproject
+    networks:
+      - openproject_network
+
+  db:
+    image: postgres:latest
+    container_name: openproject_db
+    restart: always
+    environment:
+      - POSTGRES_USER=openproject
+      - POSTGRES_PASSWORD=openproject
+      - POSTGRES_DB=openproject
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    networks:
+      - openproject_network
+
+volumes:
+  openproject_data:
+  db_data:
+
+networks:
+  openproject_network:
+    driver: bridge
