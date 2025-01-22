@@ -43,7 +43,7 @@ services:
       retries: 5
 
   phpmyadmin:
-    image: phpmyadmin/phpmyadmin:5.2.1
+    image: phpmyadmin/phpmyadmin:5.2.2
     container_name: phpmyadmin
     restart: always
     environment:
