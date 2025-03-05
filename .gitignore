@@ -3,3 +3,5 @@ mariadb_data
 etc-dnsmasq.d
 etc-pihole
 postgres-data
+pihole-docker/pi-hole-pihole-teleporter_2025-01-30_14-54-11.tar.gz
+prometheus-grafana-docker/prometheus/prometheus.yml

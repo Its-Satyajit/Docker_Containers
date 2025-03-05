@@ -9,7 +9,7 @@ services:
   pihole:
     container_name: pihole
     hostname: pihole
-    image: pihole/pihole:2024.07.0
+    image: pihole/pihole:2025.03.0
     networks:
       dns_net:
         ipv4_address: 172.20.0.100
@@ -23,21 +23,15 @@ services:
       - "WEBPASSWORD=password"
       # - "DNS1=172.20.0.7#5053"
       # - "DNS2=172.20.0.7#5053"
-
     volumes:
       - "./etc-pihole/:/etc/pihole/"
       - "./etc-dnsmasq.d/:/etc/dnsmasq.d/"
     restart: unless-stopped
 
-  # unbound:
-  #   container_name: unbound
-  #   image: mvance/unbound:1.20.0
-  #   networks:
-  #     dns_net:
-  #       ipv4_address: 172.20.0.7
-  #   volumes:
-  #     - ./unbound:/etc/unbound
-  #   ports:
-  #     - "5053:53/tcp"
-  #     - "5053:53/udp"
-  #   restart: unless-stopped
+  watchtower:
+    image: containrrr/watchtower
+    volumes:
+      - ./docker.sock:/var/run/docker.sock
+    depends_on:
+      - pihole
+    restart: unless-stopped

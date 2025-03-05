@@ -1,73 +1,88 @@
 services:
-  mariadb:
-    image: mariadb:lts-ubi9
-    container_name: mariadb
-    restart: always
-    environment:
-      MYSQL_ROOT_PASSWORD: password
-      MYSQL_DATABASE: test_db # Added default database
-      MYSQL_USER: user # Added non-root user
-      MYSQL_PASSWORD: password # Password for non-root user
-    ports:
-      - "3306:3306"
-    volumes:
-      - mariadb_data:/var/lib/mysql
-    networks:
-      - backend
-    healthcheck:
-      # Added healthcheck
-      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p$$MYSQL_ROOT_PASSWORD" ]
-      interval: 5s
-      timeout: 5s
-      retries: 5
-
   mysql:
-    image: mysql:8.0.41-debian
-    container_name: mysql
-    restart: always
-    environment:
-      MYSQL_ROOT_PASSWORD: password
-      MYSQL_DATABASE: test_db
-      MYSQL_USER: user
-      MYSQL_PASSWORD: password
+    image: mysql:latest
+    container_name: mysql_db
     ports:
-      - "3307:3306"
+      - "3308:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-your_mysql_root_password}
+      MYSQL_DATABASE: ${MYSQL_DATABASE:-mydatabase}
+      MYSQL_USER: ${MYSQL_USER:-myuser}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD:-mypassword}
     volumes:
       - mysql_data:/var/lib/mysql
     networks:
-      - backend
-    healthcheck:
-      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p$$MYSQL_ROOT_PASSWORD" ]
-      interval: 5s
-      timeout: 5s
-      retries: 5
+      - database_network
+    restart: unless-stopped
+    healthcheck: # Add health check for MySQL
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p${MYSQL_ROOT_PASSWORD}"]
+      timeout: 60s
+      retries: 3
+
+  mariadb:
+    image: mariadb:latest
+    container_name: mariadb_db
+    ports:
+      - "3307:3306"
+    environment:
+      MARIADB_ROOT_PASSWORD: ${MARIADB_ROOT_PASSWORD:-your_mariadb_root_password}
+      MARIADB_DATABASE: ${MARIADB_DATABASE:-mydatabase}
+      MARIADB_USER: ${MARIADB_USER:-myuser}
+      MARIADB_PASSWORD: ${MARIADB_PASSWORD:-mypassword}
+    volumes:
+      - mariadb_data:/var/lib/mysql
+    networks:
+      - database_network
+    restart: unless-stopped
+    healthcheck: # Add health check for MariaDB
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p${MARIADB_ROOT_PASSWORD}"]
+      timeout: 60s
+      retries: 3
+
+  postgresql:
+    image: postgres:latest
+    container_name: postgresql_db
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-myuser}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-mypassword}
+      POSTGRES_DB: ${POSTGRES_DB:-mydatabase}
+    volumes:
+      - postgresql_data:/var/lib/postgresql/data
+    networks:
+      - database_network
+    restart: unless-stopped
+    healthcheck: # Add health check for PostgreSQL
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      timeout: 60s
+      retries: 3
 
   phpmyadmin:
-    image: phpmyadmin/phpmyadmin:5.2.2
-    container_name: phpmyadmin
-    restart: always
-    environment:
-      - PMA_ARBITRARY=1 # Allow connecting to arbitrary servers 
-      - PMA_HOST=mariadb # Default host
-      - MYSQL_ROOT_PASSWORD=password
-      - UPLOAD_LIMIT=2G # Increase upload limit
+    image: phpmyadmin/phpmyadmin:latest
+    container_name: phpmyadmin_ui
     ports:
       - "8080:80"
-    depends_on:
-      mariadb:
-        condition: service_healthy
-      mysql:
-        condition: service_healthy
+    environment:
+      PMA_HOSTS: mysql_db,mariadb_db
+      PMA_USER: ${PMA_USER:-pma}
+      PMA_PASSWORD: ${PMA_PASSWORD:-password}
+      UPLOAD_LIMIT: 100M
+      MEMORY_LIMIT: 256M
     networks:
-      - backend
-  
-    
- 
-
-networks:
-  backend:
-    driver: bridge
+      - database_network
+    restart: unless-stopped
+    depends_on:
+      mysql:
+        condition: service_healthy # Depend on MySQL health
+      mariadb:
+        condition: service_healthy # Depend on MariaDB health
 
 volumes:
-  mariadb_data:
   mysql_data:
+  mariadb_data:
+  postgresql_data:
+
+networks:
+  database_network:
+    driver: bridge

@@ -1,0 +1,52 @@
+services:
+  db:
+    image: mariadb:latest
+    container_name: mariadb
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: your_root_password
+      MYSQL_DATABASE: my_database
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./mysql_data:/var/lib/mysql
+    networks:
+      - mysql-network
+
+  # cloudbeaver:
+  #   image: dbeaver/cloudbeaver:latest
+  #   container_name: cloudbeaver
+  #   restart: always
+  #   ports:
+  #     - "8978:8978"
+  #   networks:
+  #     - mysql-network
+  #
+  # whodb:
+  #   image: clidey/whodb
+  #
+  #   ports:
+  #     - "8008:8080"
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin:latest
+    container_name: phpmyadmin
+    restart: always
+    environment:
+      PMA_HOST: db
+      PMA_PORT: 3306
+      PMA_USER: root
+      PMA_PASSWORD: your_root_password
+      UPLOAD_LIMIT: 2G
+    ports:
+      - "8080:80"
+    depends_on:
+      - db
+    networks:
+      - mysql-network
+
+networks:
+  mysql-network:
+
+volumes:
+  mysql_data:
