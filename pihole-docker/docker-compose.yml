@@ -9,7 +9,7 @@ services:
   pihole:
     container_name: pihole
     hostname: pihole
-    image: pihole/pihole:2025.03.1
+    image: pihole/pihole:2025.06.2
     networks:
       dns_net:
         ipv4_address: 172.20.0.100
