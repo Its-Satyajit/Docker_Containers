@@ -1,0 +1,82 @@
+
+
+services:
+  mariadb:
+    image: bitnami/mariadb:10.6
+    restart: always
+    environment:
+      - MARIADB_USER=bn_moodle
+      - MARIADB_DATABASE=bitnami_moodle
+      - MARIADB_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+      - MARIADB_CHARACTER_SET=utf8mb4
+      - MARIADB_COLLATE=utf8mb4_unicode_ci
+    volumes:
+      - mariadb_data:/bitnami/mariadb
+
+  moodle:
+    image: bitnami/moodle:latest
+    restart: always
+    depends_on:
+      - mariadb
+    # ← no host ports here!
+    environment:
+      - MOODLE_DATABASE_HOST=mariadb
+      - MOODLE_DATABASE_USER=bn_moodle
+      - MOODLE_DATABASE_NAME=bitnami_moodle
+      - MOODLE_DATABASE_PASSWORD=${MOODLE_DB_PASSWORD}
+      - BITNAMI_DEBUG=false
+    volumes:
+      - moodle_data:/bitnami/moodle
+      - moodledata:/bitnami/moodledata
+
+  nginx:
+    image: nginx:stable-alpine
+    restart: always
+    depends_on:
+      - moodle
+    volumes:
+      - ./nginx/conf.d:/etc/nginx/conf.d:ro
+      - nginx_certs:/etc/nginx/certs:ro
+      - certbot_www:/var/www/certbot:ro
+    ports:
+      - "8081:80"    # host-port 8081 → container-port 80
+      - "8444:443"   # host-port 8444 → container-port 443
+
+  certbot:
+    image: certbot/certbot
+    restart: unless-stopped
+    volumes:
+      - nginx_certs:/etc/letsencrypt
+      - certbot_www:/var/www/certbot
+    entrypoint: >
+      sh -c "trap exit TERM;
+        while :; do
+          certbot renew --webroot -w /var/www/certbot --quiet &&
+          nginx -s reload;
+          sleep 12h;
+        done"
+
+  backup:
+    image: bitnami/bitnami-shell:latest
+    restart: unless-stopped
+    depends_on:
+      - mariadb
+      - moodle
+    volumes:
+      - mariadb_data:/bitnami/mariadb:ro
+      - moodle_data:/bitnami/moodle:ro
+      - moodledata:/bitnami/moodledata:ro
+      - ./backups:/backups
+    environment:
+      - BACKUP_CRON=${BACKUP_CRON}
+    entrypoint: |
+      /bin/sh -c "echo \"$BACKUP_CRON root tar czf /backups/moodle_$(date +\%F).tar.gz \
+        /bitnami/mariadb /bitnami/moodle /bitnami/moodledata\" > /etc/crontabs/root \
+      && crond -f -l 8"
+
+volumes:
+  mariadb_data:
+  moodle_data:
+  moodledata:
+  nginx_certs:
+  certbot_www:

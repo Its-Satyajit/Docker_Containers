@@ -1,0 +1,50 @@
+services:
+  minio:
+    image: minio/minio:latest
+    container_name: minio_server
+    restart: unless-stopped
+    environment:
+      MINIO_ROOT_USER_FILE: /run/secrets/minio_access_key
+      MINIO_ROOT_PASSWORD_FILE: /run/secrets/minio_secret_key
+      # MINIO_PROMETHEUS_AUTH_TYPE: "public" # Uncomment if you want public metrics
+    secrets:
+      - minio_access_key
+      - minio_secret_key
+    volumes:
+      - ./minio_data:/data
+    ports:
+      - "9090:9000"
+      - "9091:9001"
+    networks:
+      - minio_network
+    command: server /data --console-address ":9001"
+    healthcheck:
+      test: ["CMD", "mc", "ready", "local"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+    deploy:
+      resources:
+        limits:
+          cpus: '0.50'
+          memory: 512M
+        reservations:
+          cpus: '0.25'
+          memory: 256M
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+volumes:
+  minio_data:
+    driver: local
+networks:
+  minio_network:
+    driver: bridge
+secrets:
+  minio_access_key:
+    file: ./minio_access_key
+  minio_secret_key:
+    file: ./minio_secret_key

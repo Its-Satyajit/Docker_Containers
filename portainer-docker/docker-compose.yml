@@ -1,14 +1,14 @@
 services:
   portainer:
-    image: portainer/portainer-ce:2.28.1
+    image: portainer/portainer-ce:latest
     container_name: portainer
     restart: always
     ports:
-      - "8081:8000"
+      - "9001:8000"
       - "9000:9000"
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-      - portainer_data:/data
+      - ./portainer_data:/data
     healthcheck:
       test: ["CMD", "curl", "--silent", "--fail", "http://localhost:9000/api/status"]
       interval: 30s
