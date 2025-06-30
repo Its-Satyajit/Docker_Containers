@@ -1,37 +1,29 @@
-networks:
-  dns_net:
-    driver: bridge
-    ipam:
-      config:
-        - subnet: 172.20.0.0/16
 
 services:
   pihole:
     container_name: pihole
+    image: pihole/pihole:latest
     hostname: pihole
-    image: pihole/pihole:2025.03.1
-    networks:
-      dns_net:
-        ipv4_address: 172.20.0.100
     ports:
-      - "53:53/tcp"
-      - "53:53/udp"
-      - "67:67/udp"
-      - "80:80/tcp"
+      - "1053:53/tcp"
+      - "1053:53/udp"
+      - "1080:80/tcp"
+      - "10443:443/tcp"
     environment:
-      - "TZ=Asia/Kolkata"
-      - "WEBPASSWORD=password"
-      # - "DNS1=172.20.0.7#5053"
-      # - "DNS2=172.20.0.7#5053"
+      TZ: 'Asia/Kolkata'
+      FTLCONF_webserver_api_password: 'changeme-please'
+      FTLCONF_dns_listeningMode: 'all'
     volumes:
-      - "./etc-pihole/:/etc/pihole/"
-      - "./etc-dnsmasq.d/:/etc/dnsmasq.d/"
+      - "./etc-pihole:/etc/pihole"
     restart: unless-stopped
+    networks:
+      pihole_net:
+        ipv4_address: 172.28.0.2
 
-  watchtower:
-    image: containrrr/watchtower
-    volumes:
-      - ./docker.sock:/var/run/docker.sock
-    depends_on:
-      - pihole
-    restart: unless-stopped
+networks:
+  pihole_net:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: "172.28.0.0/16"
+          gateway: "172.28.0.1"
