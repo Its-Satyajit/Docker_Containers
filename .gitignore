@@ -5,3 +5,6 @@ etc-pihole
 postgres-data
 pihole-docker/pi-hole-pihole-teleporter_2025-01-30_14-54-11.tar.gz
 prometheus-grafana-docker/prometheus/prometheus.yml
+gospeed-docker/storage
+MinIO/minio_data
+portainer-docker/portainer_data

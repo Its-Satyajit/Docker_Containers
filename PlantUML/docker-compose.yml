@@ -1,0 +1,28 @@
+
+services:
+  plantuml:
+    image: plantuml/plantuml-server:latest
+    container_name: plantuml-server
+    restart: unless-stopped
+    ports:
+      - "8888:8080"
+    environment:
+      # Set the base URL (i.e. the context path) for accessing the service.
+      - BASE_URL=plantuml
+      # Set the security profile (recommended to keep as INTERNET unless you need additional privileges)
+      - PLANTUML_SECURITY_PROFILE=INTERNET
+      # Optionally, set other environment variables as required by your security and performance needs
+      # - PLANTUML_LIMIT_SIZE=4096
+      - PLANTUML_STATS=off
+    volumes:
+      # Mount a volume to /tmp/jetty. This is useful for working with a read-only filesystem, e.g. in restricted environments.
+      - ./plantuml_tmp:/tmp/jetty
+    healthcheck:
+      # The healthcheck uses curl to probe the /plantuml endpoint.
+      test: ["CMD", "curl", "-f", "http://localhost:8080/plantuml"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+volumes:
+  plantuml_tmp:

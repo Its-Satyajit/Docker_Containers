@@ -1,0 +1,23 @@
+services:
+  azimutt:
+    image: ghcr.io/azimuttapp/azimutt:main
+    container_name: azimutt
+    ports:
+      - "5478:4000"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    environment:
+      ## Required by runtime.exs
+      PHX_SERVER:  "true"
+      PHX_HOST:    "localhost"
+      PORT:        "4000"
+      SECRET_KEY_BASE: nudHhdc5bR4shLg83wFBqwtyq8buHmNUCrFiP6Q+zbiCRul5B8V5t29u1NNCaKmD
+      FILE_STORAGE_ADAPTER: "local"                 # ← must be set!
+      DATABASE_URL:  "postgres://postgres:password@host.docker.internal:5432/azimuttapp"
+      AUTH_PASSWORD: true
+      # (plus any other auth/email/S3/SENTRY/etc vars you actually need)
+
+    volumes:
+      - ./azimutt_uploads:/app/bin/uploads         # needed when FILE_STORAGE_ADAPTER=local
+
+    restart: unless-stopped
