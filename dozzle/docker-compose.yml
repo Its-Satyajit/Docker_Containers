@@ -1,0 +1,17 @@
+services:
+  dozzle:
+    image: amir20/dozzle:latest
+    environment:
+      - DOZZLE_MODE=swarm
+      - DOZZLE_REMOTE_AGENT=agent:7007
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    ports:
+      - 4040:8080
+    networks:
+      - dozzle
+    deploy:
+      mode: global
+networks:
+  dozzle:
+    driver: overlay

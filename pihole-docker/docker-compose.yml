@@ -1,29 +1,50 @@
+version: '3.8'
 
 services:
   pihole:
     container_name: pihole
     image: pihole/pihole:latest
-    hostname: pihole
+
+    # 👇 Required ports
     ports:
-      - "1053:53/tcp"
-      - "1053:53/udp"
-      - "1080:80/tcp"
-      - "10443:443/tcp"
-    environment:
-      TZ: 'Asia/Kolkata'
-      FTLCONF_webserver_api_password: 'changeme-please'
-      FTLCONF_dns_listeningMode: 'all'
+      - "53:53/tcp"
+      - "53:53/udp"
+      - "67:67/udp" # Only if DHCP is enabled
+      - "80:80"     # Web UI
+      - "443:443"   # Optional SSL for admin
+
+    # ✅ DNS resolution & static hostname
+    hostname: pihole
+    domainname: local
+
+    # 🔐 ENV configuration from external secrets file
+    env_file:
+      - ./pihole.env
+
+    # ✅ Volumes for persistence
     volumes:
-      - "./etc-pihole:/etc/pihole"
+      - pihole_etc:/etc/pihole
+      - dnsmasq_etc:/etc/dnsmasq.d
+
+    # 👇 Critical for container networking (non-root DNS)
+    cap_add:
+      - NET_ADMIN  # Required for DHCP
+
     restart: unless-stopped
+
+    # 🧼 Clean, isolated network (can be joined with other containers)
     networks:
       pihole_net:
-        ipv4_address: 172.28.0.2
+        ipv4_address: 192.168.10.2
 
+# 👇 Isolated network
 networks:
   pihole_net:
     driver: bridge
     ipam:
       config:
-        - subnet: "172.28.0.0/16"
-          gateway: "172.28.0.1"
+        - subnet: 192.168.10.0/24
+
+volumes:
+  pihole_etc:
+  dnsmasq_etc:

@@ -1,0 +1,34 @@
+
+
+services:
+  redis:
+    image: docker.io/valkey/valkey:8-alpine
+    container_name: searxng_redis
+    restart: unless-stopped
+    command: valkey-server --save 30 1 --loglevel warning
+    volumes:
+      - ./redis_data:/data
+
+  searxng:
+    image: docker.io/searxng/searxng:latest
+    container_name: searxng_app
+    restart: unless-stopped
+    depends_on:
+      - redis
+    ports:
+      - "1234:8080"
+    environment:
+      - SEARXNG_BASE_URL=http://localhost:1234/
+      - BIND_ADDRESS=0.0.0.0:8080
+      - UWSGI_WORKERS=2
+      - UWSGI_THREADS=2
+      - FORCE_OWNERSHIP=true
+    volumes:
+      - ./searxng_config:/etc/searxng
+      - ./searxng_cache:/var/cache/searxng
+
+
+volumes:
+
+  redis_data:
+  searxng_cache:
