@@ -1,0 +1,18 @@
+services:
+  open-webui:
+    image: ghcr.io/open-webui/open-webui:main
+    container_name: open-webui
+    restart: unless-stopped
+    ports:
+      - "7890:8080"
+    volumes:
+      - ./openwebui_data:/app/backend/data
+    environment:
+      - WEBUI_SECRET_KEY=supersecretkey123
+      - ENABLE_RAG_WEB_SEARCH=True
+      - RAG_WEB_SEARCH_ENGINE=searxng
+      - RAG_WEB_SEARCH_RESULT_COUNT=4
+      - RAG_WEB_SEARCH_CONCURRENT_REQUESTS=8
+      - SEARXNG_QUERY_URL=http://host.docker.internal:1234/search?q=<query>
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
