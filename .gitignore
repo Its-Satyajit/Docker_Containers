@@ -8,3 +8,6 @@ prometheus-grafana-docker/prometheus/prometheus.yml
 gospeed-docker/storage
 MinIO/minio_data
 portainer-docker/portainer_data
+OpenRouter/openwebui_data
+pihole-docker/unbound/
+SearXNG/redis_data/

@@ -1,50 +1,116 @@
-version: '3.8'
 
 services:
   pihole:
-    container_name: pihole
     image: pihole/pihole:latest
-
-    # 👇 Required ports
+    container_name: pihole
     ports:
-      - "53:53/tcp"
-      - "53:53/udp"
-      - "67:67/udp" # Only if DHCP is enabled
-      - "80:80"     # Web UI
-      - "443:443"   # Optional SSL for admin
+      - "127.0.0.1:53:53/tcp"
+      - "127.0.0.1:53:53/udp"
+      - "127.0.0.1:80:80/tcp"    # Optional: admin UI only accessible from host
+      - "127.0.0.1:443:443/tcp"  # Optional: HTTPS admin UI on host only
+    environment:
+      TZ: "Asia/Kolkata"
+      FTLCONF_webserver_api_password: "${WEBPASSWORD}"
+      FTLCONF_dns_listeningMode: "all"
+      FTLCONF_dns_upstreams: >
+          2620:fe::9;
+          149.112.112.10;
+          8.20.247.20;
+          8.26.56.26;
+          9.9.9.10;
+          2a13:1001::86:54:11:12;
+          4.2.2.2;
+          76.76.19.19;
+          2001:4860:4860::8888;
+          1.0.0.1;
+          149.112.112.112;
+          8.8.4.4;
+          2606:4700:4700::1001;
+          86.54.11.12;
+          2a10:50c0::ad2:ff;
+          9.9.9.11;
+          2620:fe::fe:10;
+          76.76.10.11;
+          2606:1a40::11;
+          217.160.70.42;
+          2606:4700:4700::1111;
+          2a10:50c0::ad1:ff;
+          8.8.8.8;
+          2620:119:53::53;
+          4.2.2.1;
+          2001:4860:4860::8844;
+          76.223.122.150;
+          185.228.169.9;
+          2620:fe::11;
+          1.1.1.1;
+          2a13:1001::86:54:11:1;
+          86.54.11.11;
+          193.110.81.1;
+          76.76.2.11;
+          208.67.222.222;
+          2a13:1001::86:54:11:13;
+          94.140.15.15;
+          86.54.11.13;
+          2620:fe::fe;
+          2620:fe::10;
+          94.140.14.14;
+          208.67.220.220;
+          9.9.9.9;
+          193.110.81.2;
+          2a13:1001::86:54:11:100;
+          2001:8d8:1801:86e7::1;
+          2620:119:35::35;
+          185.228.168.9;
+          86.54.11.100;
+          149.112.112.11;
+          2620:fe::fe:11;
+          2001:4860:4860:0:0:0:0:8888;
+          2001:4860:4860:0:0:0:0:8844;
 
-    # ✅ DNS resolution & static hostname
-    hostname: pihole
-    domainname: local
-
-    # 🔐 ENV configuration from external secrets file
-    env_file:
-      - ./pihole.env
-
-    # ✅ Volumes for persistence
+      
+      ServerIP: "172.25.0.10"
     volumes:
-      - pihole_etc:/etc/pihole
-      - dnsmasq_etc:/etc/dnsmasq.d
-
-    # 👇 Critical for container networking (non-root DNS)
+      - "./etc-pihole:/etc/pihole"
     cap_add:
-      - NET_ADMIN  # Required for DHCP
-
-    restart: unless-stopped
-
-    # 🧼 Clean, isolated network (can be joined with other containers)
+      - NET_ADMIN
+      - SYS_TIME
     networks:
       pihole_net:
-        ipv4_address: 192.168.10.2
+        ipv4_address: 172.25.0.10
+    restart: unless-stopped
 
-# 👇 Isolated network
+  # unbound:
+  #   container_name: unbound
+  #   image: mvance/unbound:latest
+  #   volumes:
+  #     - "./unbound/conf/unbound.conf:/opt/unbound/etc/unbound/unbound.conf:ro"
+  #     - "./unbound/db:/var/lib/unbound"
+  #   cap_add:
+  #     - NET_ADMIN
+  #   restart: unless-stopped
+  #   networks:
+  #     - pihole_net
+
+  scheduler:
+    image: mcuadros/ofelia:latest
+    command: daemon --docker
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
+    labels:
+      ofelia.job-exec.pihole_gravity.schedule: "0 2 * * SAT"
+      ofelia.job-exec.pihole_gravity.container: "pihole"
+      ofelia.job-exec.pihole_gravity.command: "docker exec pihole pihole updateGravity --yes"
+      ofelia.job-exec.pihole_flush.schedule: "0 0 * * *"
+      ofelia.job-exec.pihole_flush.container: "pihole"
+      ofelia.job-exec.pihole_flush.command: "docker exec pihole pihole flush"
+    restart: unless-stopped
+    networks:
+      - pihole_net
+
 networks:
   pihole_net:
     driver: bridge
     ipam:
       config:
-        - subnet: 192.168.10.0/24
-
-volumes:
-  pihole_etc:
-  dnsmasq_etc:
+        - subnet: "172.25.0.0/24"
+          gateway: "172.25.0.1"
