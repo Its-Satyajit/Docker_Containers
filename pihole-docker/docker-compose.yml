@@ -1,7 +1,7 @@
 
 services:
   pihole:
-    image: pihole/pihole:latest
+    image: pihole/pihole:2025.07.1
     container_name: pihole
     ports:
       - "127.0.0.1:53:53/tcp"
