@@ -1,0 +1,19 @@
+version: '3'
+
+services:
+  n8n:
+    image: n8nio/n8n:latest
+    container_name: n8n
+    restart: unless-stopped
+    ports:
+      - "5678:5678"
+    environment:
+      - GENERIC_TIMEZONE=Asia/Kolkata
+      - TZ=Asia/Kolkata
+    volumes:
+      # This now correctly references the named volume defined below.
+      - n8n_data:/home/node/.n8n
+
+# This defines the named volume that the service will use.
+volumes:
+  n8n_data:
