@@ -2,7 +2,7 @@
 
 services:
   mariadb:
-    image: bitnami/mariadb:11.8
+    image: bitnami/mariadb:12.0
     restart: always
     environment:
       - MARIADB_USER=bn_moodle
