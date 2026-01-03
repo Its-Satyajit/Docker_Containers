@@ -22,7 +22,7 @@ services:
     restart: always
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-    command: --cleanup
+    command: --cleanup --interval 300 portainer
 
 volumes:
   portainer_data:

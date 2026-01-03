@@ -1,0 +1,23 @@
+services:
+  adguardhome:
+    image: adguard/adguardhome:latest
+    container_name: adguardhome
+    restart: unless-stopped
+    networks:
+      adgnet:
+        ipv4_address: 172.31.5.10
+    ports:
+      - "53:53/tcp"
+      - "53:53/udp"
+      - "80:80/tcp"
+      - "443:443/tcp"
+      - "3333:3000/tcp"
+    volumes:
+      - ./config:/opt/adguardhome/conf
+      - ./data:/opt/adguardhome/work
+
+networks:
+  adgnet:
+    ipam:
+      config:
+        - subnet: 172.31.5.0/24

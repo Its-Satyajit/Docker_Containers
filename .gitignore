@@ -1,13 +1,4 @@
-mysql_data
-mariadb_data
-etc-dnsmasq.d
-etc-pihole
-postgres-data
-pihole-docker/pi-hole-pihole-teleporter_2025-01-30_14-54-11.tar.gz
-prometheus-grafana-docker/prometheus/prometheus.yml
-gospeed-docker/storage
-MinIO/minio_data
-portainer-docker/portainer_data
-OpenRouter/openwebui_data
-pihole-docker/unbound/
-SearXNG/redis_data/
+data
+MinIO/minio_data/
+OpenRouter/openwebui_data/
+pihole-docker/etc-pihole/

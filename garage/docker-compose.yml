@@ -1,0 +1,39 @@
+version: "3.8"
+
+services:
+  garage:
+    image: dxflrs/garage:v2.1.0
+    container_name: garage
+    restart: unless-stopped
+    volumes:
+      - ./garage.toml:/etc/garage.toml:ro
+      - ./meta:/var/lib/garage/meta
+      - ./data:/var/lib/garage/data
+    ports:
+      - "3900:3900" # S3 API
+      - "3901:3901" # RPC
+      - "3902:3902" # optional HTTP/admin
+    healthcheck:
+      test: ["CMD-SHELL", "wget -q -O - http://127.0.0.1:3902/health || true"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+
+  garage-webui:
+    image: khairul169/garage-webui:latest
+    container_name: garage_webui
+    restart: unless-stopped
+    depends_on:
+      - garage
+    ports:
+      - "3909:3909" # WebUI port
+    volumes:
+      - ./webui:/config
+    environment:
+      # Provide webui an admin token via a file path inside the container.
+      # If this WebUI expects a different env name, replace ADMIN_TOKEN_FILE with the correct one.
+      ADMIN_TOKEN_FILE: "/config/admin_token.txt"
+      # Optionally, set GARAGE_ENDPOINT if the webui needs it:
+      # GARAGE_ENDPOINT: "http://garage:3900"
+    command: ["--config", "/config/webui.toml"]

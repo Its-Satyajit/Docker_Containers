@@ -1,0 +1,13 @@
+services:
+  i2p:
+    build: .
+    image: custom-i2p:latest
+    container_name: i2p
+    restart: unless-stopped
+    network_mode: host
+    environment:
+      - JVM_XMX=512m
+      - EXT_PORT=7651
+    volumes:
+      - ./i2pconfig:/i2p/.i2p
+      - ./i2ptorrents:/i2psnark
