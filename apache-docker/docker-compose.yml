@@ -1,6 +1,6 @@
 services:
   apache:
-    image: httpd:2.4.64
+    image: httpd:2.4.66
     ports:
       - "80:80"
     volumes:
