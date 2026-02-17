@@ -1,7 +1,7 @@
 
 services:
   gopeed:
-    image: liwei2633/gopeed:1.7.1
+    image: liwei2633/gopeed:1.9.1
     container_name: gopeed
     ports:
       - "9999:9999"
