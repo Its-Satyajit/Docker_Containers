@@ -2,7 +2,7 @@ version: "3.8"
 
 services:
   garage:
-    image: dxflrs/garage:v2.1.0
+    image: dxflrs/garage:v2.2.0
     container_name: garage
     restart: unless-stopped
     volumes:
